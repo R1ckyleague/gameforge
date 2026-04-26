@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ── SEO ─────────────────────────────────────── -->
+  <title>GameForge — IDE para diseñar videojuegos con IA</title>
+  <meta name="description" content="GameForge es un IDE de escritorio todo-en-uno para diseñar videojuegos con inteligencia artificial. Editor de pixel art, música, diálogos, mapas, cinemáticas y exportación a HTML5, Godot y .exe." />
+  <meta name="keywords" content="game dev, videojuegos, IDE, pixel art, IA, inteligencia artificial, godot, html5, RPG, diseño de videojuegos, gameforge" />
+  <meta name="author" content="Ricky" />
+  <link rel="canonical" href="https://r1ckyleague.github.io/gameforge/" />
+
+  <!-- ── Open Graph ──────────────────────────────── -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://r1ckyleague.github.io/gameforge/" />
+  <meta property="og:title"       content="GameForge — IDE para diseñar videojuegos con IA" />
+  <meta property="og:description" content="Diseñá tu videojuego completo desde un solo programa. IA integrada, pixel art, música, mapas, diálogos y exportación directa." />
+  <meta property="og:image"       content="https://r1ckyleague.github.io/gameforge/og-image.png" />
+
+  <!-- ── Twitter Card ───────────────────────────── -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="GameForge — IDE para diseñar videojuegos con IA" />
+  <meta name="twitter:description" content="Diseñá tu videojuego completo desde un solo programa." />
+  <meta name="twitter:image"       content="https://r1ckyleague.github.io/gameforge/og-image.png" />
+
+  <!-- ── Structured Data ────────────────────────── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "GameForge",
+    "operatingSystem": "Windows",
+    "applicationCategory": "DeveloperApplication",
+    "description": "IDE todo-en-uno para diseñar videojuegos con IA integrada",
+    "author": { "@type": "Person", "name": "Ricky", "url": "https://github.com/R1ckyleague" },
+    "offers": [
+      { "@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free" },
+      { "@type": "Offer", "price": "20", "priceCurrency": "USD", "name": "Pro" }
+    ]
+  }
+  </script>
+
+  <!-- ── Favicon ──────────────────────────────────── -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2306080d'/%3E%3Ccircle cx='16' cy='16' r='5' fill='none' stroke='%2300c8f0' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='2' fill='%2300c8f0'/%3E%3Cline x1='16' y1='4' x2='16' y2='9' stroke='%2300c8f0' stroke-width='1.5' stroke-linecap='round'/%3E%3Cline x1='16' y1='23' x2='16' y2='28' stroke='%2300c8f0' stroke-width='1.5' stroke-linecap='round'/%3E%3Cline x1='4' y1='16' x2='9' y2='16' stroke='%2300c8f0' stroke-width='1.5' stroke-linecap='round'/%3E%3Cline x1='23' y1='16' x2='28' y2='16' stroke='%2300c8f0' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E" />
+
+  <!-- ── Fonts ───────────────────────────────────── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── Reset & variables ──────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #06080d;
+      --bg-2:      #0b0f17;
+      --bg-3:      #111622;
+      --border:    #1a2535;
+      --border-hi: #2a3f5a;
+      --text:      #c8d6e5;
+      --text-dim:  #566a80;
+      --accent:    #00c8f0;
+      --accent-g:  rgba(0,200,240,0.15);
+      --accent-2:  #7c6fff;
+      --ok:        #00c896;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ─── Scrollbar ───────────────────────────────── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 4px; }
+
+    /* ─── Utilities ───────────────────────────────── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .mono { font-family: var(--mono); }
+    .accent { color: var(--accent); }
+    .accent-2 { color: var(--accent-2); }
+    .dim { color: var(--text-dim); }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      border: 1px solid var(--border-hi);
+      color: var(--text-dim);
+    }
+    .badge .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--ok);
+      box-shadow: 0 0 6px var(--ok);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* ─── Animations ──────────────────────────────── */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.4; }
+      50%       { opacity: 0.8; }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── NAV ─────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+      background: rgba(6,8,13,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo::before {
+      content: '';
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+      animation: pulse 3s ease-in-out infinite;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 14px;
+      color: var(--text-dim);
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #020a0e;
+      border: 1px solid var(--accent);
+    }
+    .btn-primary:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 0 24px rgba(0,200,240,0.3);
+      text-decoration: none;
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border-hi);
+    }
+    .btn-ghost:hover {
+      background: var(--bg-3);
+      border-color: var(--accent);
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* ─── HERO ────────────────────────────────────── */
+    .hero {
+      padding: 160px 0 100px;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    /* Grid background */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    /* Glow center */
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 700px; height: 400px;
+      background: radial-gradient(ellipse, rgba(0,200,240,0.12) 0%, transparent 70%);
+      pointer-events: none;
+      animation: glowPulse 4s ease-in-out infinite;
+    }
+
+    .hero-content { position: relative; z-index: 1; }
+
+    .hero-badge { margin-bottom: 28px; }
+
+    .hero-title {
+      font-size: clamp(40px, 7vw, 72px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+    .hero-title .line-accent { color: var(--accent); display: block; }
+    .hero-title .line-dim { color: var(--text-dim); font-weight: 300; display: block; font-size: 80%; }
+
+    .hero-sub {
+      font-size: 18px;
+      color: var(--text-dim);
+      max-width: 560px;
+      margin: 0 auto 44px;
+      line-height: 1.7;
+    }
+
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 60px;
+    }
+    .btn-download {
+      background: var(--accent);
+      color: #020a0e;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .btn-download:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 0 32px rgba(0,200,240,0.35);
+      text-decoration: none;
+    }
+    .btn-download svg { flex-shrink: 0; }
+
+    .hero-meta {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-dim);
+      letter-spacing: 0.5px;
+    }
+
+    /* Terminal preview */
+    .hero-terminal {
+      margin: 0 auto;
+      max-width: 780px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,200,240,0.05);
+    }
+    .terminal-bar {
+      height: 36px;
+      background: var(--bg-3);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 8px;
+    }
+    .terminal-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .terminal-dot.red   { background: #f05252; }
+    .terminal-dot.yellow { background: #f5a623; }
+    .terminal-dot.green { background: #00c896; }
+    .terminal-title {
+      margin: 0 auto;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    .terminal-body {
+      padding: 24px;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.9;
+    }
+    .t-dim   { color: var(--text-dim); }
+    .t-acc   { color: var(--accent); }
+    .t-acc2  { color: var(--accent-2); }
+    .t-ok    { color: var(--ok); }
+    .t-text  { color: var(--text); }
+
+    /* ─── FEATURES ────────────────────────────────── */
+    section { padding: 100px 0; }
+
+    .section-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-eyebrow::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      max-width: 60px;
+    }
+    .section-title {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 14px;
+      color: var(--text);
+    }
+    .section-sub {
+      font-size: 16px;
+      color: var(--text-dim);
+      max-width: 520px;
+      line-height: 1.7;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 56px;
+    }
+
+    .feature-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+    .feature-card:hover { border-color: var(--border-hi); transform: translateY(-2px); }
+    .feature-card:hover::before { transform: scaleX(1); }
+
+    .feature-icon {
+      font-family: var(--mono);
+      font-size: 20px;
+      color: var(--accent);
+      margin-bottom: 14px;
+      display: block;
+    }
+    .feature-card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text);
+      letter-spacing: -0.2px;
+    }
+    .feature-card p {
+      font-size: 13.5px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* ─── HOW IT WORKS ────────────────────────────── */
+    .how { background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      margin-top: 60px;
+      position: relative;
+    }
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 28px;
+      left: calc(16.66% + 20px);
+      right: calc(16.66% + 20px);
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      opacity: 0.3;
+    }
+    .step { text-align: center; }
+    .step-num {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--bg-3);
+      border: 1px solid var(--border-hi);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-family: var(--mono);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .step h3 { font-size: 17px; font-weight: 600; margin-bottom: 10px; }
+    .step p  { font-size: 14px; color: var(--text-dim); line-height: 1.7; }
+
+    /* ─── AI PROVIDERS ────────────────────────────── */
+    .providers-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
+    .provider-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .provider-chip .tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .tag-free    { background: rgba(0,200,150,0.12); color: var(--ok); }
+    .tag-local   { background: rgba(124,111,255,0.12); color: var(--accent-2); }
+    .tag-premium { background: rgba(0,200,240,0.1); color: var(--accent); }
+
+    /* ─── INSTALL ─────────────────────────────────── */
+    .install-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+      align-items: center;
+      margin-top: 64px;
+    }
+    .install-steps-list {
+      display: flex;
+      flex-direction: column;
+    }
+    .install-step {
+      display: flex;
+      gap: 20px;
+      padding-bottom: 32px;
+    }
+    .install-step:last-child { padding-bottom: 0; }
+    .install-step-line {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .install-step-num {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--bg-3);
+      border: 1px solid var(--border-hi);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .install-step-connector {
+      width: 1px; flex: 1;
+      background: var(--border);
+      margin: 6px 0;
+      min-height: 20px;
+    }
+    .install-step:last-child .install-step-connector { display: none; }
+    .install-step-body { padding-top: 8px; }
+    .install-step-body h4 {
+      font-size: 15px; font-weight: 600;
+      color: var(--text); margin-bottom: 6px;
+    }
+    .install-step-body p {
+      font-size: 13.5px; color: var(--text-dim); line-height: 1.65;
+    }
+    .code-tag {
+      display: inline-block;
+      font-family: var(--mono); font-size: 12px;
+      background: var(--bg-3);
+      border: 1px solid var(--border-hi);
+      border-radius: 4px; padding: 2px 8px;
+      color: var(--accent); margin-top: 6px;
+    }
+
+    /* Wizard mockup */
+    .install-wizard {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+    }
+    .wizard-titlebar {
+      height: 36px; background: var(--bg-3);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      justify-content: space-between; padding: 0 14px;
+    }
+    .wizard-dots { display: flex; gap: 6px; }
+    .wizard-dots span { width: 10px; height: 10px; border-radius: 50%; }
+    .wizard-dots .r { background: #f05252; }
+    .wizard-dots .y { background: #f5a623; }
+    .wizard-dots .g { background: #00c896; }
+    .wizard-titlebar-title { font-family: var(--mono); font-size: 11px; color: var(--text-dim); }
+    .wizard-body { padding: 28px; }
+    .wizard-logo {
+      font-family: var(--mono); font-size: 22px; font-weight: 700;
+      letter-spacing: 4px; color: var(--accent); margin-bottom: 4px;
+    }
+    .wizard-version { font-family: var(--mono); font-size: 11px; color: var(--text-dim); margin-bottom: 24px; }
+    .wizard-label { font-size: 12px; color: var(--text-dim); margin-bottom: 6px; }
+    .wizard-dir-box {
+      background: var(--bg-3); border: 1px solid var(--border-hi);
+      border-radius: 6px; padding: 8px 12px;
+      font-family: var(--mono); font-size: 12px; color: var(--text);
+      margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .wizard-dir-box .browse { font-size: 11px; color: var(--accent); }
+    .wizard-checks { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .wizard-check { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-dim); }
+    .wizard-box {
+      width: 15px; height: 15px; border: 1px solid var(--accent);
+      border-radius: 3px; background: rgba(0,200,240,0.1);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .wizard-box::after { content: '✓'; font-size: 10px; color: var(--accent); }
+    .wizard-progress { height: 4px; background: var(--bg-3); border-radius: 2px; margin-bottom: 8px; overflow: hidden; }
+    .wizard-bar {
+      height: 100%; width: 72%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      border-radius: 2px;
+      animation: barAnim 2s ease-in-out infinite alternate;
+    }
+    @keyframes barAnim { from { width: 64%; } to { width: 82%; } }
+    .wizard-progress-label { font-family: var(--mono); font-size: 11px; color: var(--text-dim); margin-bottom: 20px; }
+    .wizard-btns { display: flex; justify-content: flex-end; gap: 10px; }
+    .wbtn {
+      padding: 7px 18px; border-radius: 6px;
+      font-size: 13px; font-weight: 600; border: none; cursor: default;
+    }
+    .wbtn.back { background: var(--bg-3); border: 1px solid var(--border-hi); color: var(--text-dim); }
+    .wbtn.next { background: var(--accent); color: #020a0e; }
+
+    .install-req {
+      margin-top: 40px; background: var(--bg-2);
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 18px 24px;
+      display: flex; align-items: center; gap: 28px; flex-wrap: wrap;
+    }
+    .req-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-dim); }
+    .req-item strong { color: var(--text); font-weight: 600; }
+    .req-sep { width: 1px; height: 24px; background: var(--border); }
+
+    @media (max-width: 860px) {
+      .install-grid { grid-template-columns: 1fr; }
+      .install-wizard { display: none; }
+      .install-req { flex-direction: column; gap: 14px; }
+      .req-sep { display: none; }
+    }
+
+    /* ─── PRICING ─────────────────────────────────── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 56px;
+      align-items: start;
+    }
+
+    .plan-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 30px;
+      position: relative;
+    }
+    .plan-card.featured {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), 0 0 40px rgba(0,200,240,0.1);
+    }
+    .plan-card.creator {
+      border-color: rgba(124,111,255,0.4);
+    }
+
+    .plan-popular {
+      position: absolute;
+      top: -1px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: #020a0e;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 4px 14px;
+      border-radius: 0 0 8px 8px;
+      white-space: nowrap;
+    }
+
+    .plan-name {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .plan-name.free    { color: var(--text-dim); }
+    .plan-name.pro     { color: var(--accent); }
+    .plan-name.creator { color: var(--accent-2); }
+
+    .plan-price {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .plan-amount {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      color: var(--text);
+    }
+    .plan-period { font-size: 14px; color: var(--text-dim); }
+    .plan-desc { font-size: 13px; color: var(--text-dim); margin-bottom: 24px; }
+
+    .plan-cta {
+      display: block;
+      width: 100%;
+      padding: 11px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      margin-bottom: 24px;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .plan-cta.primary {
+      background: var(--accent);
+      color: #020a0e;
+      border: 1px solid var(--accent);
+    }
+    .plan-cta.primary:hover { filter: brightness(1.1); box-shadow: 0 0 20px rgba(0,200,240,0.3); text-decoration: none; }
+    .plan-cta.ghost {
+      background: transparent;
+      color: var(--text-dim);
+      border: 1px solid var(--border-hi);
+    }
+    .plan-cta.ghost:hover { border-color: var(--text-dim); color: var(--text); text-decoration: none; }
+    .plan-cta.creator-cta {
+      background: transparent;
+      color: var(--accent-2);
+      border: 1px solid rgba(124,111,255,0.4);
+    }
+    .plan-cta.creator-cta:hover { background: rgba(124,111,255,0.08); text-decoration: none; }
+
+    .plan-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .plan-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13.5px;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+    .plan-features li::before {
+      content: '·';
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .plan-card.featured .plan-features li::before { color: var(--accent); }
+    .plan-card.creator  .plan-features li::before { color: var(--accent-2); }
+
+    /* ─── FORGE LAB ───────────────────────────────── */
+    .forge-lab {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .lab-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 56px;
+    }
+
+    .lab-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+    .lab-card:hover {
+      transform: translateY(-3px);
+    }
+    .lab-card.basics:hover  { border-color: #f5a623; box-shadow: 0 0 40px rgba(245,166,35,0.08); }
+    .lab-card.programs:hover { border-color: var(--accent); box-shadow: 0 0 40px rgba(0,200,240,0.08); }
+    .lab-card.shop:hover    { border-color: var(--ok); box-shadow: 0 0 40px rgba(0,200,150,0.08); }
+
+    .lab-card-header {
+      padding: 28px 28px 20px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    /* faint grid bg per card */
+    .lab-card-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: 0.18;
+    }
+    .lab-card-header > * { position: relative; z-index: 1; }
+
+    .lab-icon-wrap {
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+    }
+    .lab-card.basics  .lab-icon-wrap { background: rgba(245,166,35,0.1); border-color: rgba(245,166,35,0.25); }
+    .lab-card.programs .lab-icon-wrap { background: rgba(0,200,240,0.08); border-color: rgba(0,200,240,0.2); }
+    .lab-card.shop    .lab-icon-wrap { background: rgba(0,200,150,0.08); border-color: rgba(0,200,150,0.2); }
+
+    .lab-eyebrow {
+      font-family: var(--mono);
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 3px; text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .lab-card.basics  .lab-eyebrow { color: #f5a623; }
+    .lab-card.programs .lab-eyebrow { color: var(--accent); }
+    .lab-card.shop    .lab-eyebrow { color: var(--ok); }
+
+    .lab-card-name {
+      font-size: 20px; font-weight: 700;
+      letter-spacing: -0.5px; color: var(--text);
+      margin-bottom: 8px;
+    }
+    .lab-card-desc {
+      font-size: 13.5px; color: var(--text-dim);
+      line-height: 1.65;
+    }
+
+    .lab-status {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--mono); font-size: 10px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 100px;
+      margin-top: 14px;
+    }
+    .lab-status .dot {
+      width: 5px; height: 5px; border-radius: 50%;
+    }
+    .status-soon {
+      background: rgba(245,166,35,0.1);
+      color: #f5a623;
+      border: 1px solid rgba(245,166,35,0.25);
+    }
+    .status-soon .dot { background: #f5a623; animation: pulse 2s ease-in-out infinite; }
+    .status-dev {
+      background: rgba(0,200,240,0.08);
+      color: var(--accent);
+      border: 1px solid rgba(0,200,240,0.2);
+    }
+    .status-dev .dot { background: var(--accent); animation: pulse 2s ease-in-out infinite; }
+    .status-planned {
+      background: rgba(0,200,150,0.08);
+      color: var(--ok);
+      border: 1px solid rgba(0,200,150,0.2);
+    }
+    .status-planned .dot { background: var(--ok); animation: pulse 2s ease-in-out infinite; }
+
+    .lab-card-body {
+      padding: 20px 28px 28px;
+      display: flex; flex-direction: column; flex: 1;
+    }
+
+    .lab-modules-title {
+      font-family: var(--mono);
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 14px;
+    }
+
+    .lab-modules {
+      display: flex; flex-direction: column; gap: 8px;
+      flex: 1;
+    }
+    .lab-module {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; color: var(--text-dim);
+    }
+    .lab-module-icon {
+      width: 28px; height: 28px; border-radius: 6px;
+      background: var(--bg-3); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; flex-shrink: 0;
+    }
+
+    .lab-cta {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 20px; padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .lab-cta-link {
+      font-size: 13px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: gap 0.15s;
+    }
+    .lab-card.basics  .lab-cta-link { color: #f5a623; }
+    .lab-card.programs .lab-cta-link { color: var(--accent); }
+    .lab-card.shop    .lab-cta-link { color: var(--ok); }
+    .lab-cta-link:hover { gap: 10px; text-decoration: none; }
+    .lab-cta-info { font-family: var(--mono); font-size: 11px; color: var(--text-dim); }
+
+    @media (max-width: 860px) {
+      .lab-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ─── DOWNLOAD CTA ────────────────────────────── */
+    .download-section {
+      text-align: center;
+      padding: 120px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .download-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.15;
+    }
+    .download-section::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse, rgba(124,111,255,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .download-section > * { position: relative; z-index: 1; }
+    .download-title {
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+    }
+    .download-sub {
+      font-size: 17px;
+      color: var(--text-dim);
+      max-width: 480px;
+      margin: 0 auto 44px;
+    }
+    .download-info {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ─── FOOTER ──────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .footer-logo {
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .footer-logo::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 13px;
+      color: var(--text-dim);
+      transition: color 0.15s;
+    }
+    .footer-links a:hover { color: var(--text); text-decoration: none; }
+    .footer-copy {
+      font-size: 12px;
+      color: var(--text-dim);
+      width: 100%;
+      text-align: center;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      margin-top: 8px;
+      font-family: var(--mono);
+    }
+
+    /* ─── Hamburger ───────────────────────────────── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+      background: none; border: none;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--text-dim);
+      border-radius: 2px;
+      transition: all 0.25s;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); background: var(--accent); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); background: var(--accent); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 60px; left: 0; right: 0;
+      background: rgba(6,8,13,0.97);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 24px 28px;
+      z-index: 99;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      display: block;
+      padding: 12px 0;
+      font-size: 15px; font-weight: 500;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--border);
+      transition: color 0.15s;
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu a:hover { color: var(--accent); text-decoration: none; }
+    .mobile-menu .btn-primary {
+      margin-top: 16px; border-bottom: none;
+      padding: 12px 20px; border-radius: 8px;
+      text-align: center; justify-content: center;
+    }
+
+    /* ─── Responsive ──────────────────────────────── */
+    @media (max-width: 860px) {
+      .features-grid  { grid-template-columns: 1fr 1fr; }
+      .pricing-grid   { grid-template-columns: 1fr; }
+      .steps          { grid-template-columns: 1fr; gap: 48px; }
+      .steps::before  { display: none; }
+      .nav-links      { display: none; }
+      .nav-hamburger      { display: flex; }
+      .nav-cta-desktop    { display: none; }
+    }
+    @media (max-width: 540px) {
+      .features-grid  { grid-template-columns: 1fr; }
+      .hero-title     { letter-spacing: -1px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ══════════════ NAV ══════════════ -->
+<nav>
+  <div class="container nav-inner">
+    <a class="nav-logo" href="#">GameForge</a>
+    <ul class="nav-links">
+      <li><a href="#features">Módulos</a></li>
+      <li><a href="#how">Cómo funciona</a></li>
+      <li><a href="#install">Instalación</a></li>
+      <li><a href="#lab">Forge Lab</a></li>
+      <li><a href="#pricing">Planes</a></li>
+      <li><a href="https://github.com/R1ckyleague" target="_blank" rel="noopener">GitHub</a></li>
+    </ul>
+    <a class="btn btn-primary nav-cta-desktop" href="https://github.com/R1ckyleague/gameforge/releases/latest" target="_blank" rel="noopener">
+      Descargar gratis
+    </a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#features" class="mobile-link">Módulos</a>
+  <a href="#how" class="mobile-link">Cómo funciona</a>
+  <a href="#install" class="mobile-link">Instalación</a>
+  <a href="#lab" class="mobile-link">Forge Lab</a>
+  <a href="#pricing" class="mobile-link">Planes</a>
+  <a href="https://github.com/R1ckyleague" target="_blank" rel="noopener" class="mobile-link">GitHub ↗</a>
+  <a class="btn btn-primary" href="https://github.com/R1ckyleague/gameforge/releases/latest" target="_blank" rel="noopener">
+    ↓ Descargar gratis
+  </a>
+</div>
+
+<!-- ══════════════ HERO ══════════════ -->
+<header class="hero">
+  <div class="container hero-content">
+
+    <div class="hero-badge reveal">
+      <span class="badge"><span class="dot"></span>v0.1.0 — Windows x64</span>
+    </div>
+
+    <h1 class="hero-title reveal">
+      Diseñá tu videojuego
+      <span class="line-accent">completo.</span>
+      <span class="line-dim">desde un solo programa.</span>
+    </h1>
+
+    <p class="hero-sub reveal">
+      GameForge es un IDE de escritorio con IA integrada.
+      Pixel art, música, mapas, diálogos, cinemáticas y exportación
+      a HTML5, Godot o .exe — todo en un lugar.
+    </p>
+
+    <div class="hero-cta reveal">
+      <a class="btn-download" href="https://github.com/R1ckyleague/gameforge/releases/latest" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Descargar — Gratis
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/R1ckyleague/gameforge" target="_blank" rel="noopener">
+        Ver en GitHub
+      </a>
+    </div>
+
+    <p class="hero-meta reveal">Windows 10/11 · 64-bit · ~120 MB</p>
+
+    <!-- Terminal mockup -->
+    <div class="hero-terminal reveal" style="margin-top: 60px;">
+      <div class="terminal-bar">
+        <span class="terminal-dot red"></span>
+        <span class="terminal-dot yellow"></span>
+        <span class="terminal-dot green"></span>
+        <span class="terminal-title">GameForge — Chat IA</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-dim">▸ proyecto /</span> <span class="t-acc">Mi RPG de terror 2D</span></div>
+        <div style="margin: 8px 0"><span class="t-dim">⬡</span> <span class="t-text">¿Qué necesitás hoy?</span></div>
+        <div><span class="t-acc2">→</span> <span class="t-text">Generá un sprite de mago oscuro 16x16 con capucha</span></div>
+        <div style="margin: 8px 0"><span class="t-dim">⬡</span> <span class="t-ok">Sprite generado. Abriendo editor de personajes...</span></div>
+        <div><span class="t-acc2">→</span> <span class="t-text">Componé música de boss fight en Dm, tempo 140 BPM</span></div>
+        <div style="margin: 8px 0"><span class="t-dim">⬡</span> <span class="t-ok">Pista MIDI generada con 4 tracks: melody, bass, chords, drums</span></div>
+        <div><span class="t-acc2">→</span> <span class="t-text">Exportar el proyecto completo a HTML5</span></div>
+        <div style="margin: 8px 0"><span class="t-dim">⬡</span> <span class="t-ok">✓ GameForge-export.zip — listo para publicar</span></div>
+      </div>
+    </div>
+
+  </div>
+</header>
+
+<!-- ══════════════ FEATURES ══════════════ -->
+<section id="features">
+  <div class="container">
+    <p class="section-eyebrow reveal">Módulos</p>
+    <h2 class="section-title reveal">Todo lo que necesitás para crear un juego</h2>
+    <p class="section-sub dim reveal">
+      Cada módulo está asistido por IA. No hace falta experiencia previa —
+      la herramienta se adapta a tu nivel.
+    </p>
+
+    <div class="features-grid">
+
+      <div class="feature-card reveal">
+        <span class="feature-icon">⬡</span>
+        <h3>Chat IA</h3>
+        <p>Describí lo que querés y la IA genera assets, código y configuraciones. Funciona con Gemini, Claude, Ollama o el modelo local incluido.</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <span class="feature-icon">◈</span>
+        <h3>Editor de personajes</h3>
+        <p>Canvas de pixel art con paleta personalizable, herramientas de dibujo, rotación, y generación de sprites por descripción con IA.</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <span class="feature-icon">▦</span>
+        <h3>Editor de mapas</h3>
+        <p>Sistema de capas, tiles personalizables, generación procedural y previsualización en tiempo real. Exporta como JSON o imagen.</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <span class="feature-icon">♫</span>
+        <h3>Compositor de música</h3>
+        <p>Editor MIDI con tracks de melodía, bajo, acordes y batería. Síntesis de audio con Tone.js, exportación a MIDI, generación por IA.</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <span class="feature-icon">◎</span>
+        <h3>Efectos SFX</h3>
+        <p>Síntesis procedural de sonidos: disparos, explosiones, saltos, monedas. Generación por descripción y previsualización instantánea.</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <span class="feature-icon">◷</span>
+        <h3>Editor de diálogos</h3>
+        <p>Sistema de nodos con ReactFlow. Ramificación, condiciones, personajes y exportación como árbol JSON listo para usar en tu engine.</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <span class="feature-icon">▶</span>
+        <h3>Cinemáticas</h3>
+        <p>Secuencias de imágenes con efecto Ken Burns, transiciones, audio y subtítulos. Exportación como video WebM o secuencia de frames.</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <span class="feature-icon">⟨⟩</span>
+        <h3>Editor de código</h3>
+        <p>Monaco Editor (el mismo de VS Code) con resaltado para Python, JS, TypeScript, GDScript, C# y Lua. Generación y corrección con IA.</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <span class="feature-icon">↑</span>
+        <h3>Exportación</h3>
+        <p>Un click para exportar a HTML5 jugable, proyecto Godot 4, assets sueltos, instalador .exe o repositorio de GitHub.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ HOW IT WORKS ══════════════ -->
+<section id="how" class="how">
+  <div class="container">
+    <p class="section-eyebrow reveal">Flujo de trabajo</p>
+    <h2 class="section-title reveal">De la idea al juego en tres pasos</h2>
+    <p class="section-sub dim reveal">La IA analiza tu concepto y configura todo automáticamente según tu nivel de experiencia.</p>
+
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <h3>Describí tu idea</h3>
+        <p>Contale a GameForge qué juego querés hacer y cuánto sabés de programación. La IA recomienda el lenguaje, motor y configuración ideal.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">02</div>
+        <h3>Creá con los módulos</h3>
+        <p>Usá el editor de personajes, mapas, música, diálogos y código. La IA te ayuda en cada paso con sugerencias y generación automática.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">03</div>
+        <h3>Exportá y publicá</h3>
+        <p>Con un click tenés tu juego listo como HTML5 para el navegador, proyecto Godot para seguir editando, o instalador .exe para Windows.</p>
+      </div>
+    </div>
+
+    <!-- IA providers -->
+    <div style="margin-top: 72px" class="reveal">
+      <p class="section-eyebrow">Proveedores de IA compatibles</p>
+      <div class="providers-row">
+        <div class="provider-chip">
+          Gemini 2.5 Flash <span class="tag tag-free">gratis</span>
+        </div>
+        <div class="provider-chip">
+          Qwen 2.5 Coder (Ollama) <span class="tag tag-local">local</span>
+        </div>
+        <div class="provider-chip">
+          Modelo embebido <span class="tag tag-local">offline</span>
+        </div>
+        <div class="provider-chip">
+          Claude (Anthropic) <span class="tag tag-premium">pro</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ INSTALL ══════════════ -->
+<section id="install">
+  <div class="container">
+    <p class="section-eyebrow reveal">Instalación</p>
+    <h2 class="section-title reveal">En 30 segundos, listo para crear</h2>
+    <p class="section-sub dim reveal">Solo Windows por ahora. Un instalador simple, sin dependencias, sin configurar nada.</p>
+
+    <div class="install-grid">
+
+      <!-- Steps -->
+      <div class="install-steps-list reveal">
+
+        <div class="install-step">
+          <div class="install-step-line">
+            <div class="install-step-num">01</div>
+            <div class="install-step-connector"></div>
+          </div>
+          <div class="install-step-body">
+            <h4>Descargá el instalador</h4>
+            <p>Hacé click en <strong>Descargar gratis</strong> o andá a la sección de Releases en GitHub. El archivo se llama <span class="code-tag">GameForge-Setup-0.1.0.exe</span></p>
+          </div>
+        </div>
+
+        <div class="install-step">
+          <div class="install-step-line">
+            <div class="install-step-num">02</div>
+            <div class="install-step-connector"></div>
+          </div>
+          <div class="install-step-body">
+            <h4>Ejecutá el instalador</h4>
+            <p>Doble click sobre el .exe. Si Windows muestra "SmartScreen", hacé click en <em>Más información → Ejecutar de todos modos</em>. Es normal para apps sin certificado de firma.</p>
+          </div>
+        </div>
+
+        <div class="install-step">
+          <div class="install-step-line">
+            <div class="install-step-num">03</div>
+            <div class="install-step-connector"></div>
+          </div>
+          <div class="install-step-body">
+            <h4>Elegí dónde instalarlo</h4>
+            <p>Podés cambiar la carpeta de instalación o dejarlo por defecto. Marcá si querés acceso directo en el escritorio y en el menú Inicio.</p>
+          </div>
+        </div>
+
+        <div class="install-step">
+          <div class="install-step-line">
+            <div class="install-step-num">04</div>
+            <div class="install-step-connector"></div>
+          </div>
+          <div class="install-step-body">
+            <h4>Abrí GameForge y configurá tu IA</h4>
+            <p>Al abrir por primera vez, entrá a <strong>Configuración</strong> y pegá tu API key de Gemini (gratis) o Claude. O usá Ollama localmente sin internet.</p>
+            <span class="code-tag">Gemini → aistudio.google.com/app/apikey</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Wizard mockup -->
+      <div class="install-wizard reveal">
+        <div class="wizard-titlebar">
+          <div class="wizard-dots">
+            <span class="r"></span><span class="y"></span><span class="g"></span>
+          </div>
+          <span class="wizard-titlebar-title">GameForge Setup — Instalador</span>
+          <span></span>
+        </div>
+        <div class="wizard-body">
+          <div class="wizard-logo">GAMEFORGE</div>
+          <div class="wizard-version">Versión 0.1.0 — Windows x64</div>
+
+          <div class="wizard-label">Carpeta de instalación</div>
+          <div class="wizard-dir-box">
+            <span>C:\Program Files\GameForge</span>
+            <span class="browse">Examinar…</span>
+          </div>
+
+          <div class="wizard-label" style="margin-bottom:10px">Opciones</div>
+          <div class="wizard-checks">
+            <div class="wizard-check"><div class="wizard-box"></div> Crear acceso directo en el escritorio</div>
+            <div class="wizard-check"><div class="wizard-box"></div> Agregar al menú Inicio</div>
+          </div>
+
+          <div class="wizard-label">Instalando archivos…</div>
+          <div class="wizard-progress"><div class="wizard-bar"></div></div>
+          <div class="wizard-progress-label">Copiando recursos · 72%</div>
+
+          <div class="wizard-btns">
+            <button class="wbtn back">Atrás</button>
+            <button class="wbtn next">Instalar</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Requirements -->
+    <div class="install-req reveal">
+      <div class="req-item"><strong>SO</strong> Windows 10 / 11</div>
+      <div class="req-sep"></div>
+      <div class="req-item"><strong>Arch.</strong> 64-bit (x64)</div>
+      <div class="req-sep"></div>
+      <div class="req-item"><strong>RAM</strong> 4 GB mín. · 8 GB recom.</div>
+      <div class="req-sep"></div>
+      <div class="req-item"><strong>Disco</strong> ~400 MB libres</div>
+      <div class="req-sep"></div>
+      <div class="req-item"><strong>Internet</strong> Solo para la IA (Gemini / Claude). Ollama funciona offline.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════ PRICING ══════════════ -->
+<section id="pricing">
+  <div class="container">
+    <p class="section-eyebrow reveal">Planes</p>
+    <h2 class="section-title reveal">Empezá gratis, expandí cuando quieras</h2>
+    <p class="section-sub dim reveal">Sin límite de proyectos. Sin suscripción obligatoria para crear juegos completos.</p>
+
+    <div class="pricing-grid">
+
+      <!-- Free -->
+      <div class="plan-card reveal">
+        <div class="plan-name free">Free</div>
+        <div class="plan-price">
+          <span class="plan-amount">$0</span>
+          <span class="plan-period">para siempre</span>
+        </div>
+        <p class="plan-desc">Todo lo que necesitás para crear un juego de principio a fin.</p>
+        <a class="plan-cta ghost" href="https://github.com/R1ckyleague/gameforge/releases/latest" target="_blank" rel="noopener">
+          Descargar gratis
+        </a>
+        <ul class="plan-features">
+          <li>Todos los módulos de diseño</li>
+          <li>IA con Gemini, Ollama y modelo local</li>
+          <li>Exportar a HTML5, Godot y assets</li>
+          <li>Proyectos ilimitados en local</li>
+          <li>Actualizaciones de la app</li>
+        </ul>
+      </div>
+
+      <!-- Pro -->
+      <div class="plan-card featured reveal">
+        <div class="plan-popular">Recomendado</div>
+        <div class="plan-name pro">Pro</div>
+        <div class="plan-price">
+          <span class="plan-amount">$20</span>
+          <span class="plan-period">/ mes</span>
+        </div>
+        <p class="plan-desc">Para proyectos serios y equipos que necesitan el máximo.</p>
+        <a class="plan-cta primary" href="https://ricky.gumroad.com/l/gameforge-pro" target="_blank" rel="noopener">
+          Comprar Pro
+        </a>
+        <ul class="plan-features">
+          <li>Todo lo de Free</li>
+          <li>Claude API — máxima inteligencia</li>
+          <li>Publicar directamente en GitHub</li>
+          <li>Empaquetar como .exe para Windows</li>
+          <li>Acceso anticipado a módulos nuevos</li>
+          <li>Soporte prioritario</li>
+        </ul>
+      </div>
+
+      <!-- Creator -->
+      <div class="plan-card creator reveal">
+        <div class="plan-name creator">Creator</div>
+        <div class="plan-price">
+          <span class="plan-amount" style="color: var(--accent-2)">Gratis</span>
+          <span class="plan-period">por solicitud</span>
+        </div>
+        <p class="plan-desc">Para quienes quieren contribuir al desarrollo de GameForge.</p>
+        <a class="plan-cta creator-cta" href="https://github.com/R1ckyleague" target="_blank" rel="noopener">
+          Contactar en GitHub
+        </a>
+        <ul class="plan-features">
+          <li>Todo lo de Pro</li>
+          <li>Acceso al código fuente de la app</li>
+          <li>Modificar la app para uso personal</li>
+          <li>Sugerir updates directamente</li>
+          <li>Suscripción Pro vitalicia a todos los proyectos</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FORGE LAB ══════════════ -->
+<section id="lab" class="forge-lab">
+  <div class="container">
+    <p class="section-eyebrow reveal">Forge Lab</p>
+    <h2 class="section-title reveal">El ecosistema completo</h2>
+    <p class="section-sub dim reveal">
+      GameForge es solo el comienzo. Forge Lab es la familia de herramientas que
+      comparten el mismo ADN: IA integrada, música, video, código — todo en un lugar.
+    </p>
+
+    <div class="lab-grid">
+
+      <!-- FORGE BASICS -->
+      <div class="lab-card basics reveal">
+        <div class="lab-card-header">
+          <div class="lab-icon-wrap">🎓</div>
+          <div class="lab-eyebrow">Forge Lab</div>
+          <div class="lab-card-name">Forge Basics</div>
+          <p class="lab-card-desc">
+            Aprendé a usar todos los programas del ecosistema desde cero.
+            Cursos interactivos, tutoriales paso a paso y la IA como tutor personal.
+          </p>
+          <span class="lab-status status-soon">
+            <span class="dot"></span> Próximamente
+          </span>
+        </div>
+        <div class="lab-card-body">
+          <div class="lab-modules-title">Incluye</div>
+          <div class="lab-modules">
+            <div class="lab-module">
+              <div class="lab-module-icon">♫</div>
+              Compositor de música para tus proyectos
+            </div>
+            <div class="lab-module">
+              <div class="lab-module-icon">▶</div>
+              Creador de videos / tutoriales propios
+            </div>
+            <div class="lab-module">
+              <div class="lab-module-icon">⬡</div>
+              Chat IA como tutor interactivo
+            </div>
+            <div class="lab-module">
+              <div class="lab-module-icon">◈</div>
+              Editor de pixel art para ilustrar lecciones
+            </div>
+            <div class="lab-module">
+              <div class="lab-module-icon">⟨⟩</div>
+              Editor de código con ejercicios guiados
+            </div>
+            <div class="lab-module">
+              <div class="lab-module-icon">★</div>
+              Sistema de logros y progreso
+            </div>
+          </div>
+          <div class="lab-cta">
+            <a href="#" class="lab-cta-link">Anotarme →</a>
+            <span class="lab-cta-info">Gratis</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORGE PROGRAMS -->
+      <div class="lab-card programs reveal">
+        <div class="lab-card-header">
+          <div class="lab-icon-wrap">⚙️</div>
+          <div class="lab-eyebrow">Forge Lab</div>
+          <div class="lab-card-name">Forge Programs</div>
+          <p class="lab-card-desc">
+            Lo mismo que GameForge pero para crear programas de escritorio, no juegos.
+            UI, lógica, bases de datos, exportación como .exe — todo asistido por IA.
+          </p>
+          <span class="lab-status status-dev">
+            <span class="dot"></span> En desarrollo
+          </span>
+        </div>
+        <div class="lab-card-body">
+          <div class="lab-modules-title">Incluye</div>
+          <div class="lab-modules">
+            <div class="lab-module">
+              <div class="lab-module-icon">♫</div>
+              Compositor de música para tu app
+            </div>
+            <div class="lab-module">
+              <div class="lab-module-icon">▶</div>
+              Creador de intro / splash screen en video
+            </div>
+            <div class="lab-module">
+              <div class="lab-module-icon">◈</div>
+              Editor de pixel art para íconos y assets
+            </div>
+            <div class="lab-module">
+              <div class="lab-module-icon">⟨⟩</div>
+              IDE con Monaco + generación de código IA
+            </div>
+            <div class="lab-module">
+              <div class="lab-module-icon">▦</div>
+              Diseñador visual de interfaces (UI builder)
+            </div>
+            <div class="lab-module">
+              <div class="lab-module-icon">↑</div>
+              Exportación directa como .exe de Windows
+            </div>
+          </div>
+          <div class="lab-cta">
+            <a href="https://github.com/R1ckyleague" target="_blank" rel="noopener" class="lab-cta-link">Seguir avance →</a>
+            <span class="lab-cta-info">Free + Pro</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORGE SHOP -->
+      <div class="lab-card shop reveal">
+        <div class="lab-card-header">
+          <div class="lab-icon-wrap">🛒</div>
+          <div class="lab-eyebrow">Forge Lab</div>
+          <div class="lab-card-name">Forge Shop</div>
+          <p class="lab-card-desc">
+            La tienda del ecosistema. Subí y descargá juegos, programas y código
+            creados con las herramientas Forge. Mostrá tu trabajo al mundo.
+          </p>
+          <span class="lab-status status-planned">
+            <span class="dot"></span> Planificado
+          </span>
+        </div>
+        <div class="lab-card-body">
+          <div class="lab-modules-title">Va a incluir</div>
+          <div class="lab-modules">
+            <div class="lab-module">
+              <div class="lab-module-icon">🎮</div>
+              Juegos exportados con GameForge
+            </div>
+            <div class="lab-module">
+              <div class="lab-module-icon">⚙️</div>
+              Programas creados con Forge Programs
+            </div>
+            <div class="lab-module">
+              <div class="lab-module-icon">⟨⟩</div>
+              Snippets y proyectos de código abiertos
+            </div>
+            <div class="lab-module">
+              <div class="lab-module-icon">★</div>
+              Ratings, comentarios y perfiles de creador
+            </div>
+            <div class="lab-module">
+              <div class="lab-module-icon">💲</div>
+              Proyectos gratis y de pago (tus reglas)
+            </div>
+            <div class="lab-module">
+              <div class="lab-module-icon">⬡</div>
+              Búsqueda inteligente con IA
+            </div>
+          </div>
+          <div class="lab-cta">
+            <a href="https://github.com/R1ckyleague" target="_blank" rel="noopener" class="lab-cta-link">Notificarme →</a>
+            <span class="lab-cta-info">Free + comisión</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ DOWNLOAD CTA ══════════════ -->
+<section class="download-section" id="download">
+  <h2 class="download-title reveal">
+    Tu videojuego<br />
+    <span style="color: var(--accent)">empieza acá.</span>
+  </h2>
+  <p class="download-sub dim reveal">
+    Gratis para siempre. Sin registro. Sin tarjeta de crédito.
+    Descargás y en 30 segundos estás creando.
+  </p>
+  <a class="btn-download reveal" href="https://github.com/R1ckyleague/gameforge/releases/latest" target="_blank" rel="noopener" style="display: inline-flex;">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+    </svg>
+    Descargar GameForge — Gratis
+  </a>
+  <p class="download-info reveal">Windows 10 / 11 · 64-bit · Instalador NSIS</p>
+</section>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo">GameForge</div>
+      <ul class="footer-links">
+        <li><a href="https://github.com/R1ckyleague/gameforge" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://github.com/R1ckyleague/gameforge/releases" target="_blank" rel="noopener">Releases</a></li>
+        <li><a href="https://github.com/R1ckyleague" target="_blank" rel="noopener">Contacto</a></li>
+      </ul>
+    </div>
+    <p class="footer-copy">© 2025 Ricky · GameForge v0.1.0 · Hecho con Electron + React + IA</p>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        // Stagger delay for sibling cards
+        const siblings = [...e.target.parentElement.children].filter(c => c.classList.contains('reveal'));
+        const idx = siblings.indexOf(e.target);
+        e.target.style.transitionDelay = `${Math.min(idx * 60, 300)}ms`;
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Nav background on scroll
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.style.borderBottomColor = window.scrollY > 10
+      ? 'rgba(26,37,53,0.8)'
+      : 'rgba(26,37,53,1)';
+  });
+
+  // Hamburger menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  // Close mobile menu when any link is clicked
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      hamburger.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // Active nav link highlight on scroll
+  const sections = document.querySelectorAll('section[id], header[id]');
+  const navLinks = document.querySelectorAll('.nav-links a, .mobile-link');
+  const onScroll = () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 100) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current
+        ? 'var(--accent)'
+        : '';
+    });
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>
+
+</body>
+</html>
