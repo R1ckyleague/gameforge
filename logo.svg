@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 120" width="480" height="120">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00c8f0" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#00c8f0" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur-glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="480" height="120" rx="16" fill="#06080d"/>
+
+  <!-- Grid lines (subtle) -->
+  <line x1="0" y1="30" x2="480" y2="30" stroke="#1a2535" stroke-width="1" opacity="0.4"/>
+  <line x1="0" y1="60" x2="480" y2="60" stroke="#1a2535" stroke-width="1" opacity="0.4"/>
+  <line x1="0" y1="90" x2="480" y2="90" stroke="#1a2535" stroke-width="1" opacity="0.4"/>
+  <line x1="120" y1="0" x2="120" y2="120" stroke="#1a2535" stroke-width="1" opacity="0.4"/>
+  <line x1="240" y1="0" x2="240" y2="120" stroke="#1a2535" stroke-width="1" opacity="0.4"/>
+  <line x1="360" y1="0" x2="360" y2="120" stroke="#1a2535" stroke-width="1" opacity="0.4"/>
+
+  <!-- Glow behind icon -->
+  <ellipse cx="52" cy="60" rx="40" ry="40" fill="url(#glow)"/>
+
+  <!-- Hexagon icon -->
+  <polygon points="52,22 76,36 76,64 52,78 28,64 28,36"
+    fill="none" stroke="#00c8f0" stroke-width="2.5" stroke-linejoin="round" filter="url(#blur-glow)"/>
+
+  <!-- Inner hexagon -->
+  <polygon points="52,34 63,40 63,53 52,59 41,53 41,40"
+    fill="none" stroke="#00c8f0" stroke-width="1.5" stroke-linejoin="round" opacity="0.5"/>
+
+  <!-- Center dot -->
+  <circle cx="52" cy="60" r="4" fill="#00c8f0" filter="url(#blur-glow)"/>
+
+  <!-- Cross lines -->
+  <line x1="52" y1="22" x2="52" y2="34" stroke="#00c8f0" stroke-width="1.5" opacity="0.6"/>
+  <line x1="52" y1="59" x2="52" y2="78" stroke="#00c8f0" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- Separator line -->
+  <line x1="100" y1="20" x2="100" y2="100" stroke="#1a2535" stroke-width="1.5"/>
+
+  <!-- GAMEFORGE text -->
+  <text x="120" y="52"
+    font-family="'JetBrains Mono', 'Courier New', monospace"
+    font-size="28" font-weight="700"
+    letter-spacing="8"
+    fill="#c8d6e5">GAME</text>
+
+  <text x="120" y="88"
+    font-family="'JetBrains Mono', 'Courier New', monospace"
+    font-size="28" font-weight="700"
+    letter-spacing="8"
+    fill="#00c8f0">FORGE</text>
+
+  <!-- Accent bar under FORGE -->
+  <rect x="120" y="94" width="280" height="2" rx="1" fill="#00c8f0" opacity="0.4"/>
+
+  <!-- Tagline -->
+  <text x="122" y="112"
+    font-family="'JetBrains Mono', 'Courier New', monospace"
+    font-size="10" font-weight="400"
+    letter-spacing="3"
+    fill="#566a80">IDE · IA · VIDEOJUEGOS</text>
+</svg>

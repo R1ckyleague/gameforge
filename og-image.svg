@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <radialGradient id="hero-glow" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#00c8f0" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#00c8f0" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow-filter">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#06080d"/>
+
+  <!-- Grid -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1a2535" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)" opacity="0.3"/>
+
+  <!-- Center glow -->
+  <ellipse cx="600" cy="260" rx="400" ry="280" fill="url(#hero-glow)"/>
+
+  <!-- Big hexagon -->
+  <polygon points="600,80 710,140 710,260 600,320 490,260 490,140"
+    fill="none" stroke="#00c8f0" stroke-width="3" opacity="0.8" filter="url(#glow-filter)"/>
+  <polygon points="600,120 668,158 668,234 600,272 532,234 532,158"
+    fill="none" stroke="#00c8f0" stroke-width="1.5" opacity="0.35"/>
+
+  <!-- Center dot -->
+  <circle cx="600" cy="200" r="10" fill="#00c8f0" filter="url(#glow-filter)"/>
+  <circle cx="600" cy="200" r="5" fill="#06080d"/>
+
+  <!-- Cross lines on hex -->
+  <line x1="600" y1="80" x2="600" y2="120" stroke="#00c8f0" stroke-width="2" opacity="0.7"/>
+  <line x1="600" y1="272" x2="600" y2="320" stroke="#00c8f0" stroke-width="2" opacity="0.7"/>
+
+  <!-- GAMEFORGE title -->
+  <text x="600" y="410"
+    font-family="'Courier New', monospace"
+    font-size="80" font-weight="700"
+    letter-spacing="20"
+    text-anchor="middle"
+    fill="#c8d6e5">GAME<tspan fill="#00c8f0">FORGE</tspan></text>
+
+  <!-- Underline -->
+  <rect x="200" y="425" width="800" height="2" rx="1" fill="#00c8f0" opacity="0.3"/>
+
+  <!-- Tagline -->
+  <text x="600" y="490"
+    font-family="'Courier New', monospace"
+    font-size="22" font-weight="400"
+    letter-spacing="6"
+    text-anchor="middle"
+    fill="#566a80">IDE PARA DISEÑAR VIDEOJUEGOS CON IA</text>
+
+  <!-- Pills -->
+  <rect x="270" y="530" width="140" height="36" rx="18" fill="none" stroke="#1a2535" stroke-width="1.5"/>
+  <text x="340" y="553" font-family="'Courier New', monospace" font-size="13" letter-spacing="2" text-anchor="middle" fill="#566a80">PIXEL ART</text>
+
+  <rect x="430" y="530" width="120" height="36" rx="18" fill="none" stroke="#1a2535" stroke-width="1.5"/>
+  <text x="490" y="553" font-family="'Courier New', monospace" font-size="13" letter-spacing="2" text-anchor="middle" fill="#566a80">MÚSICA</text>
+
+  <rect x="570" y="530" width="110" height="36" rx="18" fill="none" stroke="#2a3f5a" stroke-width="1.5"/>
+  <text x="625" y="553" font-family="'Courier New', monospace" font-size="13" letter-spacing="2" text-anchor="middle" fill="#00c8f0">GRATIS</text>
+
+  <rect x="700" y="530" width="110" height="36" rx="18" fill="none" stroke="#1a2535" stroke-width="1.5"/>
+  <text x="755" y="553" font-family="'Courier New', monospace" font-size="13" letter-spacing="2" text-anchor="middle" fill="#566a80">MAPAS</text>
+
+  <rect x="830" y="530" width="100" height="36" rx="18" fill="none" stroke="#1a2535" stroke-width="1.5"/>
+  <text x="880" y="553" font-family="'Courier New', monospace" font-size="13" letter-spacing="2" text-anchor="middle" fill="#566a80">HTML5</text>
+</svg>
