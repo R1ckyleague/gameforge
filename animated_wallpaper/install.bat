@@ -1,26 +1,26 @@
 @echo off
 setlocal
-title Animated Wallpaper — Installer
+title Animated Wallpaper — Instalador
 
 echo ============================================================
-echo  Animated Wallpaper — dependency installer
+echo  Animated Wallpaper — Instalador de dependencias
 echo ============================================================
 echo.
-echo  Before continuing, make sure VLC is installed:
-echo    https://www.videolan.org/vlc/
+echo  NO necesitas instalar VLC ni ningun programa extra.
+echo  Solo necesitas Python instalado (python.org).
 echo.
 pause
 
 echo.
-echo [1/2] Upgrading pip...
+echo [1/2] Actualizando pip...
 python -m pip install --upgrade pip
 
 echo.
-echo [2/2] Installing Python packages...
+echo [2/2] Instalando paquetes...
 python -m pip install -r "%~dp0requirements.txt"
 
 echo.
 echo ============================================================
-echo  Done!  Run  run.bat  to start the wallpaper.
+echo  Listo! Ejecuta run.bat para abrir el programa.
 echo ============================================================
 pause
