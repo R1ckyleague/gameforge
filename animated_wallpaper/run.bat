@@ -1,4 +1,8 @@
 @echo off
-rem Start Animated Wallpaper without a visible console window
-rem pythonw = Windows Python without the console (same as python but silent)
-start "" pythonw "%~dp0main.py"
+cd /d "%~dp0"
+rem Intenta con pythonw (sin consola); si falla, abre debug.bat
+pythonw main.py 2>nul
+if errorlevel 1 (
+    echo pythonw fallo. Abriendo modo debug...
+    call debug.bat
+)
