@@ -1,8 +1,8 @@
 @echo off
 cd /d "%~dp0"
-rem Intenta con pythonw (sin consola); si falla, abre debug.bat
-pythonw main.py 2>nul
+rem Abre la interfaz grafica sin ventana de consola
+pythonw app.py 2>nul
 if errorlevel 1 (
-    echo pythonw fallo. Abriendo modo debug...
+    echo Algo fallo. Abriendo en modo debug...
     call debug.bat
 )

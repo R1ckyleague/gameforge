@@ -104,6 +104,7 @@ class GPUMonitor:
         self._thread: Optional[threading.Thread] = None
         self._has_nvidia = self._detect_nvidia()
         self._has_win32pdh = self._detect_win32pdh()
+        self.last_usage: float = 0.0   # updated by background thread, safe to read anytime
 
     # ------------------------------------------------------------------ public
 
@@ -150,6 +151,7 @@ class GPUMonitor:
         while self._running:
             try:
                 u = self.usage()
+                self.last_usage = u
                 if u >= self.threshold and not self._above:
                     self._above = True
                     if self.on_high:
