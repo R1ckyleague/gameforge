@@ -10,6 +10,7 @@ Technique:
 """
 import ctypes
 import ctypes.wintypes
+import os
 import threading
 import time
 from typing import Optional
@@ -23,11 +24,60 @@ try:
 except ImportError:
     _HAS_WIN32 = False
 
-try:
-    import vlc as _vlc
-    _HAS_VLC = True
-except ImportError:
-    _HAS_VLC = False
+
+def _find_vlc_dir() -> Optional[str]:
+    """Return the VLC installation directory, or None if not found."""
+    candidates = [
+        r"C:\Program Files\VideoLAN\VLC",
+        r"C:\Program Files (x86)\VideoLAN\VLC",
+    ]
+    # Also check the registry
+    try:
+        import winreg  # noqa: PLC0415
+        for hive in (winreg.HKEY_LOCAL_MACHINE, winreg.HKEY_CURRENT_USER):
+            for sub in (
+                r"SOFTWARE\VideoLAN\VLC",
+                r"SOFTWARE\WOW6432Node\VideoLAN\VLC",
+            ):
+                try:
+                    key = winreg.OpenKey(hive, sub)
+                    path, _ = winreg.QueryValueEx(key, "InstallDir")
+                    winreg.CloseKey(key)
+                    if path:
+                        candidates.insert(0, path)
+                except FileNotFoundError:
+                    pass
+    except Exception:
+        pass
+
+    for path in candidates:
+        if os.path.isfile(os.path.join(path, "libvlc.dll")):
+            return path
+    return None
+
+
+def _load_vlc():
+    """Import vlc, adding VLC's folder to PATH first if needed."""
+    try:
+        import vlc  # noqa: PLC0415
+        return vlc
+    except Exception:
+        pass
+
+    vlc_dir = _find_vlc_dir()
+    if vlc_dir:
+        os.environ["PATH"] = vlc_dir + os.pathsep + os.environ.get("PATH", "")
+        os.add_dll_directory(vlc_dir)
+        try:
+            import vlc  # noqa: PLC0415
+            return vlc
+        except Exception:
+            pass
+    return None
+
+
+_vlc = _load_vlc()
+_HAS_VLC = _vlc is not None
 
 
 # ---------------------------------------------------------------------------
@@ -99,10 +149,17 @@ class WallpaperEngine:
                 "pywin32 is not installed. Run: pip install pywin32"
             )
         if not _HAS_VLC:
+            vlc_dir = _find_vlc_dir()
+            if vlc_dir is None:
+                raise RuntimeError(
+                    "VLC no encontrado.\n"
+                    "Instala VLC (64-bit) desde https://www.videolan.org/\n"
+                    "y asegurate de que Python tambien sea 64-bit."
+                )
             raise RuntimeError(
-                "python-vlc is not installed or VLC is missing.\n"
-                "Install VLC from https://www.videolan.org/ then:\n"
-                "  pip install python-vlc"
+                f"VLC encontrado en '{vlc_dir}' pero no se pudo cargar.\n"
+                "Prueba reinstalando VLC (64-bit) y python-vlc:\n"
+                "  pip install --upgrade python-vlc"
             )
         self._running = True
         self._thread = threading.Thread(
