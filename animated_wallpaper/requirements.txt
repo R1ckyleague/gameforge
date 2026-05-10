@@ -1,0 +1,10 @@
+# Animated Wallpaper — Python dependencies
+# Run:  pip install -r requirements.txt
+#
+# External requirement: VLC must be installed separately
+#   https://www.videolan.org/vlc/
+
+python-vlc>=3.0.18122
+pywin32>=306
+pystray>=0.19.5
+Pillow>=10.0.0
